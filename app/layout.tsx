@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { BookOpen, Library } from "lucide-react";
+import SwitchCustomization from "@/components/switch-theme";
+import Link from "next/link";
+import AvatarHeader from "@/components/avatar-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +32,49 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex min-h-screen flex-col ">
+            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
+              <div className="container flex h-14 items-center  justify-between px-10">
+                <div className="flex items-center space-x-2 ">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-2 font-semibold text-xl"
+                  >
+                    <BookOpen className="h-7 w-7" />
+                    <span>Book Collection</span>
+                  </Link>
+                  <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
+                    <Link
+                      href="/"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                    >
+                      Books
+                    </Link>
+                    <Link
+                      href="/categories"
+                      className="text-sm font-medium transition-colors hover:text-primary"
+                    >
+                      Categories
+                    </Link>
+                  </nav>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <SwitchCustomization />
+                  <AvatarHeader />
+                </div>
+              </div>
+            </header>
+            <main className="flex-1 dark:bg-[#0D0907] bg-[#F0EFE7] px-10">
+              {children}
+            </main>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
