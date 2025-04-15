@@ -27,6 +27,10 @@ export type Books = {
 export const columns: ColumnDef<Books>[] = [
   {
     accessorKey: "id",
+    header: "ID",
+  },
+  {
+    accessorKey: "title",
     header: ({ column }) => {
       return (
         <Button
@@ -34,19 +38,26 @@ export const columns: ColumnDef<Books>[] = [
           className="cursor-pointer font-normal"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          ID
+          Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
   },
   {
-    accessorKey: "title",
-    header: "Title",
-  },
-  {
     accessorKey: "author",
-    header: "Author",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="cursor-pointer font-normal"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Author
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "publicationDate",
@@ -74,7 +85,18 @@ export const columns: ColumnDef<Books>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+        return (
+          <Button
+            variant="ghost"
+            className="cursor-pointer font-normal"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Category
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </Button>
+        );
+      },
   },
   {
     accessorKey: "actions",

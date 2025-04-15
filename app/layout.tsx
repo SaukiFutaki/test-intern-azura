@@ -1,11 +1,11 @@
+import AvatarHeader from "@/components/avatar-header";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import SwitchCustomization from "@/components/switch-theme";
+import { BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import { BookOpen, Library } from "lucide-react";
-import SwitchCustomization from "@/components/switch-theme";
 import Link from "next/link";
-import AvatarHeader from "@/components/avatar-header";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,20 +49,9 @@ export default function RootLayout({
                     <BookOpen className="h-7 w-7" />
                     <span>Book Collection</span>
                   </Link>
-                  <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
-                    <Link
-                      href="/"
-                      className="text-sm font-medium transition-colors hover:text-primary"
-                    >
-                      Books
-                    </Link>
-                    <Link
-                      href="/categories"
-                      className="text-sm font-medium transition-colors hover:text-primary"
-                    >
-                      Categories
-                    </Link>
-                  </nav>
+                  {/* <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
+                 
+                  </nav> */}
                 </div>
                 <div className="flex items-center space-x-4">
                   <SwitchCustomization />
