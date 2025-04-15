@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,7 +27,18 @@ export type Books = {
 export const columns: ColumnDef<Books>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          className="cursor-pointer font-normal"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "title",
