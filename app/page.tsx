@@ -1,7 +1,184 @@
-
 import AddButtonBooks from "@/components/add-button-books";
+import { Books, columns } from "@/components/books/column";
+import { DataTable } from "@/components/books/data-table";
 
-export default function Home() {
+async function getData(): Promise<Books[]> {
+  return [
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "The Great Gatsby",
+      author: "F. Scott Fitzgerald",
+      publicationDate: "1925-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+  ];
+}
+
+export default async function Home() {
+  const data = await getData();
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between mb-8">
@@ -15,6 +192,7 @@ export default function Home() {
           <AddButtonBooks />
         </div>
       </div>
+      <DataTable columns={columns} data={data} />
     </div>
   );
 }

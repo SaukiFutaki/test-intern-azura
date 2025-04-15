@@ -44,6 +44,7 @@ export default function AddButtonBooks() {
       title: "",
       author: "",
       publicationDate: "",
+      imageUrl: "",
       publisher: "",
       numberOfPages: 0,
       category: "",
@@ -160,6 +161,19 @@ export default function AddButtonBooks() {
                 />
               </div>
 
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URL (optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter image URL" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="publisher"
