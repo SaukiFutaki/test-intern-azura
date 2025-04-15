@@ -5,7 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
+ 
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -51,13 +51,12 @@ export default function AddButtonBooks() {
     },
   });
 
-  const handleAddCategory = (newCategory) => {
+  const handleAddCategory = (newCategory: { id: string; name: string; }) => {
     setCategories([...categories, newCategory]);
   };
 
   function onSubmit(data: Book) {
     console.log(data);
-    // Reset form with new ID after submission
     form.reset({
       id: uuidv4(),
       title: "",

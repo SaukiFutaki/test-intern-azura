@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 // id,title,author,publicationDate,imageUrl,publisher,numberOfPages,category
 export const bookSchema = z.object({
   id: z.string().uuid(),
