@@ -1,6 +1,8 @@
 import AddButtonBooks from "@/components/add-button-books";
 import { Books, columns } from "@/components/books/column";
 import { DataTable } from "@/components/books/data-table";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 async function getData(): Promise<Books[]> {
   return [
@@ -179,13 +181,17 @@ async function getData(): Promise<Books[]> {
 
 export default async function Home() {
   const data = await getData();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Book Collection</h1>
           <p className="text-muted-foreground">
-            Manage your books and categories in one place.
+            Hi <span className="font-bold text-primary">{session?.user?.name || "stranger"}</span>, Welcome to your
+            book collection!
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -193,7 +199,6 @@ export default async function Home() {
         </div>
       </div>
       <DataTable columns={columns} data={data} />
-     
     </div>
   );
 }

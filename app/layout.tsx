@@ -1,10 +1,7 @@
-import AvatarHeader from "@/components/avatar-header";
+import Header from "@/components/header";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import SwitchCustomization from "@/components/switch-theme";
-import { BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Link from "next/link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -39,26 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col ">
-            <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ">
-              <div className="container flex h-14 items-center  justify-between px-10">
-                <div className="flex items-center space-x-2 ">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2 font-semibold text-xl"
-                  >
-                    <BookOpen className="h-7 w-7" />
-                    <span>Book Collection</span>
-                  </Link>
-                  {/* <nav className="flex items-center space-x-4 lg:space-x-6 mx-6">
-                 
-                  </nav> */}
-                </div>
-                <div className="flex items-center space-x-4">
-                  <SwitchCustomization />
-                  <AvatarHeader />
-                </div>
-              </div>
-            </header>
+            <Header />
             <main className="flex-1 dark:bg-[#0D0907] bg-[#F0EFE7] px-10">
               {children}
             </main>

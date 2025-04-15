@@ -1,36 +1,35 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Take Home Test Internship 2024
 
-## Getting Started
+**Problem Statement**
 
-First, run the development server:
+Create a book list website which allows to manage books and book categories.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Context**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A book category contains a set of books.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A book must at least have the properties Title, Author, Publication Date, Publisher, Number of pages, Category
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Task**
 
-## Learn More
+Create a website which allows an end user
 
-To learn more about Next.js, take a look at the following resources:
+1. Create/Update/Delete Book Categories 
+2. Create/Update/Delete Books
+3. View List Book Categories
+4. View List Books
+5. Filter List Books by Categories
+6. Filter List Books by text that will search for Title, Author and Publisher
+7. Filter List Books by Publication Date
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Recommended Technology Stack**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Choose the one you are most familiar.
 
-## Deploy on Vercel
+- JavaScript/PHP/Go or any programming language mastered
+- Database SQL/noSQL,
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Assignment Collection Method**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Candidate should put their test results on a public code repository hosted on Github.
+- Once test is completed, please share the Github repository URL to hiring team so they can review your work.

@@ -53,30 +53,3 @@ export const verification = sqliteTable("verification", {
   createdAt: integer("created_at", { mode: "timestamp" }),
   updatedAt: integer("updated_at", { mode: "timestamp" }),
 });
-
-// id,title,author,publicationDate,imageUrl(optional),publisher,numberOfPages,category
-export const book = sqliteTable("book", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  author: text("author").notNull(),
-  publicationDate: integer("publication_date", { mode: "timestamp" }).notNull(),
-  imageURl: text("image_url").notNull(),
-  publisher: text("publisher").notNull(),
-  numberOfPages: integer("number_of_pages").notNull(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => bookCategory.id, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
-
-export const bookCategory = sqliteTable("book_category", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
