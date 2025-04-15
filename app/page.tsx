@@ -97,8 +97,18 @@ async function getData(): Promise<Books[]> {
     {
       id: "728ed52f",
       title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
+      author: "Sauid",
+      publicationDate: "2024-04-10",
+      imageUrl: "https://example.com/gatsby.jpg",
+      publisher: "Scribner",
+      numberOfPages: 180,
+      category: "Fiction",
+    },
+    {
+      id: "728ed52f",
+      title: "AH AH HA HA",
+      author: "Sauid",
+      publicationDate: "2022-04-10",
       imageUrl: "https://example.com/gatsby.jpg",
       publisher: "Scribner",
       numberOfPages: 180,
@@ -108,17 +118,7 @@ async function getData(): Promise<Books[]> {
       id: "728ed52f",
       title: "The Great Gatsby",
       author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
+      publicationDate: "2022-04-10",
       imageUrl: "https://example.com/gatsby.jpg",
       publisher: "Scribner",
       numberOfPages: 180,
@@ -193,6 +193,7 @@ export default async function Home() {
         </div>
       </div>
       <DataTable columns={columns} data={data} />
+     
     </div>
   );
 }

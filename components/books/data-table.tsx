@@ -52,6 +52,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CategoryFiltering } from "./category-filtering";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -66,6 +67,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const table = useReactTable({
@@ -79,9 +81,23 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     state: {
+      globalFilter,
       sorting,
       columnFilters,
       columnVisibility,
+    },
+    globalFilterFn: (row, columnId, filterValue) => {
+      const search = filterValue.toLowerCase();
+      const original = row.original as {
+        title: string;
+        author: string;
+        publisher: string;
+      };
+      return (
+        original.title.toLowerCase().includes(search) ||
+        original.author.toLowerCase().includes(search) ||
+        original.publisher.toLowerCase().includes(search)
+      );
     },
   });
 
@@ -99,15 +115,41 @@ export function DataTable<TData, TValue>({
   const pageSizeOptions = [5, 10, 20, 50, 100];
   return (
     <div>
-      <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter by title..."
-          value={(table.getColumn("author")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("author")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+      <div className="flex items-center py-4 ">
+        <div className="flex items-center space-x-2">
+          <Input
+            placeholder="Filter by title, author, or publisher..."
+            value={globalFilter ?? ""}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
+          {table.getColumn("publicationDate") && (
+            <Select
+              onValueChange={(value) =>
+                table.getColumn("publicationDate")?.setFilterValue(value)
+              }
+              value={
+                (table
+                  .getColumn("publicationDate")
+                  ?.getFilterValue() as string) ?? ""
+              }
+            >
+              <SelectTrigger className="w-[180px] cursor-pointer">
+                <SelectValue placeholder="Filter by year" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="2021">2021</SelectItem>
+                <SelectItem value="2022">2022</SelectItem>
+                <SelectItem value="2023">2023</SelectItem>
+                <SelectItem value="2024">2024</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+          {table.getColumn("category") && (
+            <CategoryFiltering column={table.getColumn("category")!} />
+          )}
+        </div>
+
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -150,6 +192,7 @@ export function DataTable<TData, TValue>({
           </PopoverContent>
         </Popover>
       </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
