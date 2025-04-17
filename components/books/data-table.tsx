@@ -57,11 +57,13 @@ import { CategoryFiltering } from "./category-filtering";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  years: number[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  years,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -125,23 +127,29 @@ export function DataTable<TData, TValue>({
           />
           {table.getColumn("publicationDate") && (
             <Select
-              onValueChange={(value) =>
-                table.getColumn("publicationDate")?.setFilterValue(value)
-              }
+              onValueChange={(value) => {
+                if (value === "all") {
+                  table.getColumn("publicationDate")?.setFilterValue(undefined);
+                } else {
+                  table.getColumn("publicationDate")?.setFilterValue(value);
+                }
+              }}
               value={
                 (table
                   .getColumn("publicationDate")
-                  ?.getFilterValue() as string) ?? ""
+                  ?.getFilterValue() as string) ?? "all"
               }
             >
               <SelectTrigger className="w-[180px] cursor-pointer">
                 <SelectValue placeholder="Filter by year" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2021">2021</SelectItem>
-                <SelectItem value="2022">2022</SelectItem>
-                <SelectItem value="2023">2023</SelectItem>
-                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="all">All years</SelectItem>
+                {years?.map((year) => (
+                  <SelectItem key={year} value={year.toString()}>
+                    {year}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           )}

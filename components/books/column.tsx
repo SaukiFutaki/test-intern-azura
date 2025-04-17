@@ -1,25 +1,36 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import ActionColumns from "./action-colomn";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export type Books = {
   id: string;
   title: string;
   author: string;
-  publicationDate: string;
+  publicationDate: Date;
   imageUrl: string;
   publisher: string;
   numberOfPages: number;
-  category: string;
+  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    userId: string;
+  };
 };
 
 export const columns: ColumnDef<Books>[] = [
   {
     accessorKey: "id",
-    header: "ID",
+    header: "No",
+    cell: ({ cell }) => {
+      const index = cell.row.index + 1;
+      return <div className="">{index}</div>;
+    },
   },
   {
     accessorKey: "title",
@@ -33,6 +44,22 @@ export const columns: ColumnDef<Books>[] = [
           Title
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ cell }) => {
+      const title = cell.getValue() as string;
+      const imageUrl = cell.row.original.imageUrl as string;
+      return (
+        <div className="flex items-center ">
+          <Avatar>
+            <AvatarImage
+              src={imageUrl || "https://github.com/shadcn.png"}
+              alt={title}
+            />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <span className="ml-2">{title}</span>
+        </div>
       );
     },
   },
@@ -66,6 +93,14 @@ export const columns: ColumnDef<Books>[] = [
         </div>
       );
     },
+    filterFn: (row, id, filterValue) => {
+      if (!filterValue || filterValue === "all") return true;
+
+      const date = new Date(row.getValue(id) as string);
+      const year = date.getFullYear().toString();
+
+      return year === filterValue;
+    },
   },
   {
     accessorKey: "publisher",
@@ -89,19 +124,22 @@ export const columns: ColumnDef<Books>[] = [
         </Button>
       );
     },
+    cell: ({ cell }) => {
+      const category = cell.getValue() as Books["category"];
+
+      return <div className="">{category.name}</div>;
+    },
     meta: {
       variant: "select",
       label: "Category",
-      options: [
-        { label: "Fiction", value: "Fiction" },
-        { label: "Non-fiction", value: "Non-fiction" },
-        { label: "Science", value: "Science" },
-        { label: "Biography", value: "Biography" },
-        { label: "History", value: "History" },
-        { label: "Children", value: "Children" },
-        { label: "Fantasy", value: "Fantasy" },
-        { label: "Mystery", value: "Mystery" },
-      ],
+    },
+    filterFn: (row, id, filterValue) => {
+    
+      if (!filterValue || filterValue.length === 0) return true;
+
+      const category = row.getValue(id) as Books["category"];
+     
+      return (filterValue as string[]).includes(category.id);
     },
   },
   {

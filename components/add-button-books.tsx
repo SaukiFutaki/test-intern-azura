@@ -1,22 +1,13 @@
 "use client";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
- 
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Book, bookSchema } from "@/schemas/books";
-import { PlusCircle } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SelectCategories } from "./add-categories";
-import { v4 as uuidv4 } from "uuid";
 import {
   Form,
   FormControl,
@@ -25,17 +16,48 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { DatePicker } from "./date-picker";
+import { Input } from "@/components/ui/input";
+import { addBookData } from "@/lib/actions/books";
+import { getAllCategoriesUser } from "@/lib/actions/category";
+import { Book, bookSchema } from "@/schemas/books";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { Loader2, PlusCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
+import { SelectCategories } from "./add-categories";
+import { DatePicker } from "./date-picker";
 
 export default function AddButtonBooks() {
-  const [categories, setCategories] = useState([
-    { id: uuidv4(), name: "Fiction" },
-    { id: uuidv4(), name: "Non-fiction" },
-    { id: uuidv4(), name: "Science" },
-    { id: uuidv4(), name: "History" },
-    { id: uuidv4(), name: "Biography" },
-  ]);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [categories, setCategories] = useState<{ id: string; name: string }[]>(
+    []
+  );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const userCategories = await getAllCategoriesUser();
+
+        const formattedCategories = userCategories.map((cat) => ({
+          id: cat.id,
+          name: cat.name,
+        }));
+        setCategories(formattedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+
+    if (isDialogOpen) {
+      fetchCategories();
+    }
+  }, [isDialogOpen]);
 
   const form = useForm<Book>({
     resolver: zodResolver(bookSchema),
@@ -47,30 +69,49 @@ export default function AddButtonBooks() {
       imageUrl: "",
       publisher: "",
       numberOfPages: 0,
-      category: "",
+      categoryId: "",
     },
   });
 
-  const handleAddCategory = (newCategory: { id: string; name: string; }) => {
+  const handleAddCategory = (newCategory: { id: string; name: string }) => {
     setCategories([...categories, newCategory]);
   };
 
-  function onSubmit(data: Book) {
-    console.log(data);
-    form.reset({
-      id: uuidv4(),
-      title: "",
-      author: "",
-      publicationDate: "",
-      publisher: "",
-      numberOfPages: 0,
-      category: "",
+  async function onSubmit(data: Book) {
+    startTransition(async () => {
+      try {
+        await addBookData(data);
+
+        form.reset({
+          id: uuidv4(),
+          title: "",
+          author: "",
+          publicationDate: "",
+          imageUrl: "",
+          publisher: "",
+          numberOfPages: 0,
+          categoryId: "",
+        });
+        toast("Book added successfully", {
+          description: `${data.title} has been added`,
+          duration: 4000,
+          action: {
+            label: "Okay",
+            onClick: () => {
+              router.refresh();
+            },
+          },
+        });
+        setIsDialogOpen(false);
+      } catch (error) {
+        throw new Error("Failed to add book" + error);
+      }
     });
   }
 
   return (
     <>
-      <Dialog>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button className="cursor-pointer">
             <PlusCircle className="mr-2 h-4 w-4" />
@@ -189,7 +230,7 @@ export default function AddButtonBooks() {
 
               <FormField
                 control={form.control}
-                name="category"
+                name="categoryId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
@@ -207,8 +248,16 @@ export default function AddButtonBooks() {
               />
 
               <div className="pt-4">
-                <Button type="submit" className="w-full">
-                  Add Book
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isPending}
+                >
+                  {isPending ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    "Add Book"
+                  )}
                 </Button>
               </div>
             </form>

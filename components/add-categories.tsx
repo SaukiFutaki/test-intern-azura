@@ -2,8 +2,8 @@
 import * as React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { v4 as uuidv4 } from 'uuid';
+import { Loader2, Plus } from "lucide-react";
+import { v4 as uuidv4 } from "uuid";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,6 +24,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { addCategory } from "@/lib/actions/category";
+import { toast } from "sonner";
 
 interface SelectCategoriesProps {
   value: string;
@@ -32,27 +34,49 @@ interface SelectCategoriesProps {
   onAddCategory: (newCategory: { id: string; name: string }) => void;
 }
 
-export function SelectCategories({ 
-  value, 
-  onValueChange, 
-  categories, 
-  onAddCategory 
+export function SelectCategories({
+  value,
+  onValueChange,
+  categories,
+  onAddCategory,
 }: SelectCategoriesProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAddCategory = () => {
+  const handleAddCategory = async () => {
     if (newCategoryName.trim()) {
-      const newCategory = {
-        id: uuidv4(),
-        name: newCategoryName.trim()
-      };
-      onAddCategory(newCategory);
-      setNewCategoryName("");
-      setOpenAddDialog(false);
+      setIsSubmitting(true);
+
+      try {
+        const newCategoryId = uuidv4();
+
+        
+        await addCategory({
+          id: newCategoryId,
+          name: newCategoryName.trim(),
+        });
+
+       
+        const newCategory = {
+          id: newCategoryId,
+          name: newCategoryName.trim(),
+        };
+        toast("Category added successfully", {
+          description : `${newCategory.name} has been added`,
+          duration: 2000,
+        })
+        onAddCategory(newCategory);
+        setNewCategoryName("");
+        setOpenAddDialog(false);
+
+      } catch (error) {
+        console.error("Failed to add category:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
-
   return (
     <div className="flex gap-2">
       <Select value={value} onValueChange={onValueChange}>
@@ -98,7 +122,9 @@ export function SelectCategories({
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleAddCategory}>Add Category</Button>
+            <Button onClick={handleAddCategory} disabled={isSubmitting} className="cursor-pointer">
+              {isSubmitting ? <Loader2 className="animate-spin"/> : "Add Category"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

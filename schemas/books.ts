@@ -16,7 +16,7 @@ export const bookSchema = z.object({
     }),
   publisher: z.string().min(1, { message: "Publisher is required" }),
   numberOfPages: z.number().min(1, { message: "Number of pages is required" }),
-  category: z.string().min(1, { message: "Category is required" }),
+  categoryId: z.string().min(1, { message: "Category is required" }),
 });
 
 export type Book = z.infer<typeof bookSchema>;

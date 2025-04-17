@@ -1,204 +1,49 @@
 import AddButtonBooks from "@/components/add-button-books";
-import { Books, columns } from "@/components/books/column";
+import { columns } from "@/components/books/column";
 import { DataTable } from "@/components/books/data-table";
+import { Button } from "@/components/ui/button";
+import {
+  getAllBooksDataByUser,
+  getYearsPublication,
+} from "@/lib/actions/books";
+import { getAllCategoriesUser } from "@/lib/actions/category";
 import { auth } from "@/lib/auth";
+import { FolderKanban } from "lucide-react";
 import { headers } from "next/headers";
-
-async function getData(): Promise<Books[]> {
-  return [
-    {
-      id: "AS8ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "Sauid",
-      publicationDate: "2024-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "AH AH HA HA",
-      author: "Sauid",
-      publicationDate: "2022-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "2022-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-    {
-      id: "728ed52f",
-      title: "The Great Gatsby",
-      author: "F. Scott Fitzgerald",
-      publicationDate: "1925-04-10",
-      imageUrl: "https://example.com/gatsby.jpg",
-      publisher: "Scribner",
-      numberOfPages: 180,
-      category: "Fiction",
-    },
-  ];
-}
-
+import { Suspense } from "react";
 export default async function Home() {
-  const data = await getData();
   const session = await auth.api.getSession({
     headers: await headers(),
   });
+
+  const data = await getAllBooksDataByUser();
+  const years = await getYearsPublication();
+
+  const d = await getAllCategoriesUser();
+  console.log(d);
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Book Collection</h1>
           <p className="text-muted-foreground">
-            Hi <span className="font-bold text-primary">{session?.user?.name || "stranger"}</span>, Welcome to your
-            book collection!
+            Hi{" "}
+            <span className="font-bold text-primary">
+              {session?.user?.name || "stranger"}
+            </span>
+            , Welcome to your book collection!
           </p>
         </div>
         <div className="flex items-center gap-4">
+          <Button variant="outline" className="cursor-pointer">
+            <FolderKanban /> Manage Categories
+          </Button>
           <AddButtonBooks />
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <DataTable columns={columns} data={data} years={years} />
+      </Suspense>
     </div>
   );
 }

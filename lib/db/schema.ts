@@ -1,4 +1,5 @@
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { relations } from 'drizzle-orm';
 
 export const user = sqliteTable("user", {
   id: text("id").primaryKey(),
@@ -54,29 +55,54 @@ export const verification = sqliteTable("verification", {
   updatedAt: integer("updated_at", { mode: "timestamp" }),
 });
 
-// id,title,author,publicationDate,imageUrl(optional),publisher,numberOfPages,category
-export const book = sqliteTable("book", {
-  id: text("id").primaryKey(),
-  title: text("title").notNull(),
-  author: text("author").notNull(),
-  publicationDate: integer("publication_date", { mode: "timestamp" }).notNull(),
-  imageURl: text("image_url").notNull(),
-  publisher: text("publisher").notNull(),
-  numberOfPages: integer("number_of_pages").notNull(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => bookCategory.id, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
 
 export const bookCategory = sqliteTable("book_category", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    userId: text("user_id")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    });
+// id,title,author,publicationDate,imageUrl(optional),publisher,numberOfPages,category
+    export const book = sqliteTable("book", {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    author: text("author").notNull(),
+    publicationDate: integer("publication_date", { mode: "timestamp" }).notNull(),
+    imageUrl: text("image_url").notNull(),
+    publisher: text("publisher").notNull(),
+    numberOfPages: integer("number_of_pages").notNull(),
+    categoryId: text("category_id")
+        .notNull()
+        .references(() => bookCategory.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+        .notNull()
+        .references(() => user.id, { onDelete: "cascade" }),
+    });
+
+  
+    export const userRelations = relations(user, ({ many }) => ({
+        books: many(book),
+        bookCategories: many(bookCategory),
+      }));
+      
+      export const bookRelations = relations(book, ({ one }) => ({
+        user: one(user, {
+          fields: [book.userId],
+          references: [user.id],
+        }),
+        category: one(bookCategory, {
+          fields: [book.categoryId],
+          references: [bookCategory.id],
+        }),
+      }));
+      
+      export const bookCategoryRelations = relations(bookCategory, ({ one, many }) => ({
+        user: one(user, {
+          fields: [bookCategory.userId],
+          references: [user.id],
+        }),
+        books: many(book),
+      }));

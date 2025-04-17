@@ -1,5 +1,6 @@
-import React from "react";
-import { MoreHorizontal } from "lucide-react";
+"use client";
+import React, { useTransition } from "react";
+import { Loader2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -21,11 +22,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { deleteBookData } from "@/lib/actions/books";
 
 export default function ActionColumns({ row }: CellContext<Books, unknown>) {
   const book = row.original;
   const router = useRouter();
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+  const [isPending, startTransition] = useTransition();
+  const handleDelete = async () => {
+    setShowDeleteDialog(false);
+    startTransition(async () => {
+      await deleteBookData(book.id);
+      router.refresh();
+    });
+  };
   return (
     <>
       <DropdownMenu>
@@ -46,7 +56,7 @@ export default function ActionColumns({ row }: CellContext<Books, unknown>) {
           <DropdownMenuItem>
             <span
               className="cursor-pointer"
-              onClick={() => router.push(`/books/${book.id}`)}
+              onClick={() => router.push(`/book/${book.id}`)}
             >
               View Book Details
             </span>
@@ -55,7 +65,7 @@ export default function ActionColumns({ row }: CellContext<Books, unknown>) {
             onSelect={() => setShowDeleteDialog(true)}
             className="text-red-600 cursor-pointer"
           >
-            Delete Section
+            Delete Book
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -74,13 +84,10 @@ export default function ActionColumns({ row }: CellContext<Books, unknown>) {
             <Button
               variant="destructive"
               className=""
-              onClick={() => {
-                setTimeout(() => (document.body.style.pointerEvents = ""), 100);
-
-                setShowDeleteDialog(false);
-              }}
+              onClick={handleDelete}
+              disabled={isPending}
             >
-              Delete
+              {isPending ? <Loader2 className="animate-spin" /> : "Delete"}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
