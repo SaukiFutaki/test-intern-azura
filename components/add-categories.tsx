@@ -1,9 +1,14 @@
 "use client";
-import * as React from "react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, Plus } from "lucide-react";
-import { v4 as uuidv4 } from "uuid";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -15,17 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { addCategory } from "@/lib/actions/category";
+import { Loader2, Plus } from "lucide-react";
+import * as React from "react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 interface SelectCategoriesProps {
   value: string;
@@ -42,40 +42,40 @@ export function SelectCategories({
 }: SelectCategoriesProps) {
   const [openAddDialog, setOpenAddDialog] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = React.useTransition();
 
   const handleAddCategory = async () => {
-    if (newCategoryName.trim()) {
-      setIsSubmitting(true);
+    if (!newCategoryName) return;
+    const newCategory = {
+      id: uuidv4(),
+      name: newCategoryName,
+    };
+    setNewCategoryName("");
 
+    startTransition(async () => {
       try {
-        const newCategoryId = uuidv4();
-
-        
-        await addCategory({
-          id: newCategoryId,
-          name: newCategoryName.trim(),
+        const result = await addCategory(newCategory);
+        if (result.success === false) {
+          toast.error("Failed to create category", {
+            description: `An error occurred while creating the category`,
+            richColors: true,
+          });
+          return;
+        }
+        onAddCategory(newCategory);
+        toast("Category created successfully", {
+          description: "You can now use this category.",
+          richColors: true,
         });
 
-       
-        const newCategory = {
-          id: newCategoryId,
-          name: newCategoryName.trim(),
-        };
-        toast("Category added successfully", {
-          description : `${newCategory.name} has been added`,
-          duration: 2000,
-        })
-        onAddCategory(newCategory);
-        setNewCategoryName("");
         setOpenAddDialog(false);
-
       } catch (error) {
-        console.error("Failed to add category:", error);
-      } finally {
-        setIsSubmitting(false);
+        toast.error("Failed to create category", {
+          description: `An error occurred while creating the category ${error}`,
+          richColors: true,
+        });
       }
-    }
+    });
   };
   return (
     <div className="flex gap-2">
@@ -122,8 +122,16 @@ export function SelectCategories({
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={handleAddCategory} disabled={isSubmitting} className="cursor-pointer">
-              {isSubmitting ? <Loader2 className="animate-spin"/> : "Add Category"}
+            <Button
+              onClick={handleAddCategory}
+              disabled={isPending}
+              className="cursor-pointer"
+            >
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Add Category"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

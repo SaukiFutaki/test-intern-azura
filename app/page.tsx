@@ -10,6 +10,7 @@ import { getAllCategoriesUser } from "@/lib/actions/category";
 import { auth } from "@/lib/auth";
 import { FolderKanban } from "lucide-react";
 import { headers } from "next/headers";
+import Link from "next/link";
 import { Suspense } from "react";
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -35,9 +36,11 @@ export default async function Home() {
           </p>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="cursor-pointer">
-            <FolderKanban /> Manage Categories
-          </Button>
+          <Link href="/categories">
+            <Button variant="outline" className="cursor-pointer">
+              <FolderKanban /> Manage Categories
+            </Button>
+          </Link>
           <AddButtonBooks />
         </div>
       </div>

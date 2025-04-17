@@ -16,14 +16,14 @@ export default async function Page({ params }: PageProps) {
   if (!data) {
     notFound();
   }
+
   return (
     <div className="container py-10 space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Book Details</h1>
         <p className="text-muted-foreground">
-            View and manage <span className="text-primary">
-                    {data.title}
-                </span> details.
+          View and manage <span className="text-primary">{data.title}</span>{" "}
+          details.
         </p>
       </div>
       <Separator />

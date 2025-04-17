@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { deleteBookData } from "@/lib/actions/books";
-
+import { toast } from "sonner";
 export default function ActionColumns({ row }: CellContext<Books, unknown>) {
   const book = row.original;
   const router = useRouter();
@@ -33,6 +33,10 @@ export default function ActionColumns({ row }: CellContext<Books, unknown>) {
     setShowDeleteDialog(false);
     startTransition(async () => {
       await deleteBookData(book.id);
+      toast.success("Book deleted successfully", {
+        description: `${book.title} has been deleted`,
+        richColors: true,
+      });
       router.refresh();
     });
   };
@@ -83,7 +87,7 @@ export default function ActionColumns({ row }: CellContext<Books, unknown>) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <Button
               variant="destructive"
-              className=""
+              className="cursor-pointer"
               onClick={handleDelete}
               disabled={isPending}
             >
