@@ -56,14 +56,18 @@ export default function UpdateBookForm({ book }: UpdateBookFormProps) {
   const [isPending, startTransition] = useTransition();
   const [categories, setCategories] = useState<Category[]>([]);
   const [open, setOpen] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setIsLoadingCategories(true);
       try {
         const fetchedCategories = await getAllCategoriesUser();
         setCategories(fetchedCategories || []);
       } catch (error) {
         console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoadingCategories(false);
       }
     };
 
@@ -253,11 +257,15 @@ export default function UpdateBookForm({ book }: UpdateBookFormProps) {
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {field.value
-                              ? categories.find(
-                                  (category) => category.id === field.value
-                                )?.name || "Select category"
-                              : "Select category"}
+                            {isLoadingCategories ? (
+                              <Loader2 className="animate-spin" />
+                            ) : field.value ? (
+                              categories.find(
+                                (category) => category.id === field.value
+                              )?.name || "Select category"
+                            ) : (
+                              "Select category"
+                            )}
                             <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
